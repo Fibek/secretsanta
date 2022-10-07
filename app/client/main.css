@@ -1,4 +1,13 @@
 body {
-  padding: 10px;
-  font-family: sans-serif;
+  /* padding: 10px; */
+  /* font-family: sans-serif; */
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+canvas {
+  margin: auto;
+  position: relative;
+  z-index: -3 !important;
 }
