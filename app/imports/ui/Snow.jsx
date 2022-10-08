@@ -1,10 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Sketch from 'react-p5';
+import { useState, useEffect } from 'react';
 
 
-w = window.outerWidth;
-h = window.outerHeight;
+w = window.innerWidth;
+h = window.innerHeight;
 Particles=[]
 bg = 0
 
@@ -34,7 +35,9 @@ class Particle{
 
 class Snow extends React.Component {
   setup = (p5, parentRef) => {
-    p5.createCanvas(w,h);
+    var cnv = p5.createCanvas(w,h);
+    cnv.position(0,0);
+    cnv.style('z-index', '-1');
     p5.strokeWeight(0);
     for(let i=0;i<250;i++){
         Particles.push(new Particle());
@@ -55,7 +58,6 @@ class Snow extends React.Component {
         Particles[i].display(p5)
     }
   };
-  
 
   render() {
     return (

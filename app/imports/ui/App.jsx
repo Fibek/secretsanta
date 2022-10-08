@@ -1,10 +1,9 @@
-import React from 'react';
+import * as React from 'react';
 import Snow from './Snow.jsx'
-import { Hello } from './Hello.jsx';
-import { Info } from './Info.jsx';
+import { ChakraProvider } from '@chakra-ui/react'
 
 export const App = () => (
-  <div>
+  <ChakraProvider>
     <Snow />
-  </div>
+  </ChakraProvider>
 );
