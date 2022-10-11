@@ -37,6 +37,8 @@ class Snow extends React.Component {
   state = {w: window.innerWidth, h: window.innerHeight, P5: null, BG: null};
 
   drawbg = (p5) => {
+    if(this.state.BG)
+      this.state.BG.remove();
     bg = p5.createGraphics(this.state.w, this.state.h);
     this.setState({ w: window.innerWidth, h: window.innerHeight, P5: p5, BG: bg });
     bg.background(7,5,20);
