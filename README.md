@@ -1,4 +1,6 @@
 # Secret Santa
 
 ## To-Do
-* Resize event handler
+* Login form [Formik]
+* Dashboard [Chakra-ui]
+* Sorting algorithm [backend]
