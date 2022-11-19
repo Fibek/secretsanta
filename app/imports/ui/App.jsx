@@ -14,8 +14,7 @@ export const App = () => {
   return (
     <ChakraProvider>
       <Snow />
-      {!isregister && <LoginForm />}
-      {isregister && !user ? <LoginForm /> : <LoginForm />}
+      {!user ? <LoginForm /> : null}
     </ChakraProvider>
   )
 };
