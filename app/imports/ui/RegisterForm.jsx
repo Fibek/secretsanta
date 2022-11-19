@@ -12,9 +12,11 @@ import {
   VStack,
   Link
 } from "@chakra-ui/react";
+import {
+  Link as ReactRouterLink
+} from "react-router-dom";
 
 export default LoginForm = () => {
-  const [isregister, setisregister] = useState(false);
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -53,13 +55,20 @@ export default LoginForm = () => {
                 value={formik.values.password}
               />
             </FormControl>
+            <FormControl>
+              <FormLabel htmlFor="password">Hasło</FormLabel>
+              <Input
+                id="password2"
+                name="password2"
+                type="password"
+                variant="filled"
+                onChange={formik.handleChange}
+                value={formik.values.password2}
+              />
+            </FormControl>
             <Button type="submit" colorScheme="purple" width="full">
-              Zaloguj
+              Zarejestruj
             </Button>
-	
-	    <Button onClick={() => setisregister(true)}>
-	      Nie masz jeszcze konta? Zarejestruj się tutaj.
-	    </Button>
           </VStack>
         </form>
       </Box>
