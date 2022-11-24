@@ -13,7 +13,7 @@ export const App = () => {
   return (
     <ChakraProvider>
       <Snow />
-      {!user ? <LoginForm /> : null}
+      {!user ? <LoginForm /> : <Dashboard />}
     </ChakraProvider>
   )
 };

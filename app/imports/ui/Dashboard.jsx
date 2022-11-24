@@ -10,10 +10,11 @@ import {
   FormLabel,
   Input,
   VStack,
-  Link
+  Link,
+  Text
 } from "@chakra-ui/react";
 
-export default LoginForm = () => {
+export default Dashboard = () => {
 
   return( 
     <Flex align="center" justify="center" h="100vh">
