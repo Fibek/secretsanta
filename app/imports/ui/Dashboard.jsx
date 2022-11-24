@@ -24,13 +24,13 @@ import {
   ModalBody,
   ModalCloseButton,
   useDisclosure,
-  Lorem
 } from "@chakra-ui/react";
 import { BiUserCircle } from 'react-icons/bi'
+import { MdOutlineLogout } from 'react-icons/md'
 
 export default Dashboard = () => {
   const user = useTracker(() => Meteor.user());
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen, onOpen, onClose} = useDisclosure();
 
   return( 
     <Flex align="center" justify="center" h="100vh">
@@ -41,16 +41,21 @@ export default Dashboard = () => {
 	  <Button variant="ghost" onClick={onOpen}> 
 	    <Icon as={BiUserCircle} w={12} h={12} />
 	  </Button>
+	  <Button variant="ghost" onClick={onOpen}> 
+	    <Icon as={MdOutlineLogout} w={12} h={12} />
+	  </Button>
 	  <Modal isOpen={isOpen} onClose={onClose} isCentered>
 	    <ModalOverlay />
 	    <ModalContent>
-	      <ModalHeader>Modal Title</ModalHeader>
+	      <ModalHeader>Czy napewno chcesz się wylogować?</ModalHeader>
 	      <ModalCloseButton />
 	      <ModalFooter>
 		<Button colorScheme='blue' mr={3} onClick={onClose}>
-            	  Close
+		  Nie
             	</Button>
-            	<Button variant='ghost'>Secondary Action</Button>
+		<Button colorScheme='blue' mr={3} onClick={()=>Meteor.logout()}>
+		  Tak
+            	</Button>
 	      </ModalFooter>
 	    </ModalContent>
 	  </Modal>
