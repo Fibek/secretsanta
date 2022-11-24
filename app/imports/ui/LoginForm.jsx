@@ -25,7 +25,12 @@ export default LoginForm = () => {
           password: "",
         }}
         onSubmit={(values) => {
-          Accounts.createUser({username: values.username, password: values.password});
+	  Accounts.createUser({username: values.username, password: values.password},
+	    error => {
+	      if(!error)
+		setisregister(false);
+	    }
+	  );
         }}
       >
         {({ handleSubmit, errors, touched }) => (
@@ -61,8 +66,7 @@ export default LoginForm = () => {
                 />
                 <FormErrorMessage>{errors.password}</FormErrorMessage>
               </FormControl>
-              <Button type="submit" colorScheme="purple" width="full" 
-		      onClick={() => setisregister(false)}>
+              <Button type="submit" colorScheme="purple" width="full" >
                 Zarejestruj
               </Button>
             </VStack>

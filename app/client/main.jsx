@@ -13,17 +13,17 @@ Meteor.startup(() => {
   const container = document.getElementById('react-target');
   const root = createRoot(container); // createRoot(container!)
 
-  // root.render(<App />);
-  const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <App />
-  },
-]);
+  root.render(<App />);
+  // const router = createBrowserRouter([
+  // {
+  //   path: "/",
+  //   element: <App />
+  // },
+// ]);
 
-  root.render(
-    <React.StrictMode>
-      <RouterProvider router={router} />
-    </React.StrictMode>
-  );
+  // root.render(
+  //   <React.StrictMode>
+  //     <RouterProvider router={router} />
+  //   </React.StrictMode>
+  // );
 });
