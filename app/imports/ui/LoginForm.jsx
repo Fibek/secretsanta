@@ -21,11 +21,12 @@ export default LoginForm = () => {
     <>
       <Formik
         initialValues={{
-          username: "",
-          password: "",
+          email:    "",
+	  name:     "",
+          password: ""
         }}
         onSubmit={(values) => {
-	  Accounts.createUser({username: values.username, password: values.password},
+	  Accounts.createUser({email: values.email, password: values.password, profile: {name: values.name}},
 	    error => {
 	      if(!error)
 		setisregister(false);
@@ -37,11 +38,21 @@ export default LoginForm = () => {
           <form onSubmit={handleSubmit}>
             <VStack spacing={4} align="flex-start">
               <FormControl>
-                <FormLabel>Nazwa użytkownika</FormLabel>
+                <FormLabel htmlFor="email">Adres email</FormLabel>
                 <Field
                   as={Input}
-                  id="username"
-                  name="username"
+                  id="email"
+                  name="email"
+                  type="email"
+                  variant="filled"
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel>Imię</FormLabel>
+                <Field
+                  as={Input}
+                  id="name"
+                  name="name"
                   type="text"
                   variant="filled"
                 />
@@ -80,7 +91,7 @@ export default LoginForm = () => {
     <>
        <Formik
         initialValues={{
-          username: "",
+          email: "",
           password: "",
         }}
         onSubmit={(values) => {
@@ -91,12 +102,12 @@ export default LoginForm = () => {
           <form onSubmit={handleSubmit}>
             <VStack spacing={4} align="flex-start">
               <FormControl>
-                <FormLabel>Nazwa użytkownika</FormLabel>
+                <FormLabel htmlFor="email">Adres email</FormLabel>
                 <Field
                   as={Input}
-                  id="username"
-                  name="username"
-                  type="text"
+                  id="email"
+                  name="email"
+                  type="email"
                   variant="filled"
                 />
               </FormControl>
