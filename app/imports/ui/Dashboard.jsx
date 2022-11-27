@@ -23,6 +23,7 @@ import {
   AlertDialogHeader,
   AlertDialogContent,
   AlertDialogOverlay,
+  Tabs, TabList, TabPanels, Tab, TabPanel,
 } from "@chakra-ui/react";
 import { MdOutlineLogout } from 'react-icons/md'
 
@@ -34,7 +35,7 @@ export default Dashboard = () => {
   return( 
     <Flex align="center" justify="center" h="100vh">
       <Box bg="white" p={6} rounded="md" w={800}>
-	<Flex>
+	<Flex p={4}>
 	  <Heading> Witaj, { user.profile.name }!  </Heading>
 	  <Spacer />
 	  <Button variant="ghost" onClick={onOpen}> 
@@ -67,9 +68,39 @@ export default Dashboard = () => {
       	  </AlertDialogOverlay>
       	</AlertDialog>
         </Flex>
-
-	<Textarea placeholder="Jesli chcesz, to wpisz tutaj wskazowki." />
-	<Button> Zapisz </Button>
+	<Tabs size='lg' isFitted variant='enclosed'>
+	  <TabList mb='1em' size='sm'>
+  	    <Tab>Wylosuj</Tab>
+  	    <Tab>O sobie</Tab>
+  	  </TabList>
+  	  <TabPanels>
+  	    <TabPanel>
+	      <VStack>	
+		{user.draw_person ? 
+		<Heading size='md' p={6}>
+		  Wylosowano: { user.pickedPerson }!
+		</Heading>
+		  :
+		<>
+		<Heading size='md' p={6}>
+		  Jeszcze nie wylosowałeś nikogo, kliknij przycisk poniżej!
+		</Heading>
+	      	<Button colorScheme='green' size='lg' 
+		  onClick={()=>Meteor.call('pickPerson')}> 
+		  Wylosuj! 
+		</Button>
+		</>
+		}
+	      </VStack>
+  	    </TabPanel>
+  	    <TabPanel>
+	      <VStack>	
+		<Textarea size='lg' placeholder="Jeśli chcesz dać propozycję św. Mikołajowi, możesz to zrobić tutaj." />
+	      	<Button size='lg'> Zapisz </Button>
+	      </VStack>
+  	    </TabPanel>
+  	  </TabPanels>
+	</Tabs>
       </Box>
     </Flex>
   );
