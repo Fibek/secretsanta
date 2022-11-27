@@ -95,7 +95,7 @@ export default LoginForm = () => {
           password: "",
         }}
         onSubmit={(values) => {
-	  Meteor.loginWithPassword(values.username,values.password);
+	  Meteor.loginWithPassword(values.email,values.password);
         }}
       >
         {({ handleSubmit, errors, touched }) => (
