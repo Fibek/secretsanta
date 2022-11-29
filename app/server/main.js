@@ -11,6 +11,7 @@ Accounts.onCreateUser((options,user) => {
 
   const customUser = Object.assign({
     pickedPerson: '',
+    pickedPersonId: '',
     note: '',
   }, user);
   
@@ -76,10 +77,49 @@ Meteor.methods({
   'pickPerson'() {
     const tmp = Raffle.findOne({'users.giver': Meteor.userId()}, 
 		  {fields: {'users.recipient.$':1}}
-		);
-    console.log('pickPerson()',Meteor.userId(),tmp.users[0].recipient);
+		).users[0].recipient;
+    const pickedUserName = Meteor.users.findOne({_id: tmp},{fields: {profile: 1}}).profile.name;
+    console.log('pickPerson()',tmp);
     Meteor.users.update({_id: Meteor.userId()}, 
-      {$set: {pickedPerson: tmp.users[0].recipient}});
+      {$set: {pickedPerson: pickedUserName}});
+    Meteor.users.update({_id: Meteor.userId()}, 
+      {$set: {pickedPersonId: tmp}});
+  },
+  'saveNote'(textnote) {
+    console.log('savenote()',textnote);
+    Meteor.users.update({_id: Meteor.userId()}, 
+      {$set: {note: textnote}});
+  }
+});
+
+Meteor.publish('userPickedPerson', function () {
+  if (this.userId) {
+    return Meteor.users.find({ _id: this.userId }, {
+      fields: { pickedPerson: 1}
+    });
+  } else {
+    this.ready();
+  }
+});
+
+Meteor.publish('userOwnNote', function () {
+  if (this.userId) {
+    return Meteor.users.find({ _id: this.userId }, {
+      fields: { note: 1}
+    });
+  } else {
+    this.ready();
+  }
+});
+
+Meteor.publish('userReadNote', function () {
+  if (this.userId) {
+    const pickedId = Meteor.users.findOne({ _id: this.userId}, {
+      fields: { pickedPersonid: 1}
+    }).pickedPersonid;
+    return Meteor.users.find({_id: pickedId},{fields: {note: 1}});
+  } else {
+    this.ready();
   }
 });
 

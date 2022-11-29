@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { useTracker } from 'meteor/react-meteor-data';
 import React, {useState} from 'react'
-import { useFormik } from "formik";
+import { Formik, Field, useFormik } from "formik";
 import {
   Box,
   Button,
@@ -24,13 +24,20 @@ import {
   AlertDialogContent,
   AlertDialogOverlay,
   Tabs, TabList, TabPanels, Tab, TabPanel,
+  Text,
+  Card, CardHeader, CardBody, CardFooter, Divider
 } from "@chakra-ui/react";
 import { MdOutlineLogout } from 'react-icons/md'
 
 export default Dashboard = () => {
+  Meteor.subscribe('userPickedPerson');
+  Meteor.subscribe('userOwnNote');
+  Meteor.subscribe('userReadNote');
   const user = useTracker(() => Meteor.user());
   const { isOpen, onOpen, onClose} = useDisclosure();
   const cancelRef = React.useRef()
+  const pickedPersonNote = 'alalal';
+  console.log(pickedPersonNote);
 
   return( 
     <Flex align="center" justify="center" h="100vh">
@@ -77,16 +84,41 @@ export default Dashboard = () => {
   	    <TabPanel>
 	      <VStack>	
 		{user.pickedPerson ? 
-		<Heading size='md' p={6}>
-		  Wylosowano: { user.pickedPerson }!
-		</Heading>
+		<>
+		  <Heading size='lg' p={6}>
+		    Wylosowano: { user.pickedPerson }!
+		  </Heading>
+		  {!pickedPersonNote ?
+		    <Heading size='md'>
+		      List od tej osoby nie dotarł do Św. Mikołaja 🎅
+		    </Heading>
+		    :
+		    <>
+		      <Card>
+			<CardHeader>
+			  <Heading size='md'> List do Św. Mikołaja 🎅  </Heading>
+			</CardHeader>
+			<Divider/>
+		        <CardBody>
+		          <Text fontSize='2xl'>
+		            {pickedPersonNote}
+		          </Text>
+		        </CardBody>
+			<Divider/>
+			<CardFooter>
+			  <Heading size='md'> Od: {user.pickedPerson} </Heading>
+			</CardFooter>
+		      </Card>
+		    </>
+		  }
+		</>
 		  :
 		<>
 		<Heading size='md' p={6}>
 		  Jeszcze nie wylosowałeś nikogo, kliknij przycisk poniżej!
 		</Heading>
 	      	<Button colorScheme='green' size='lg' 
-		  onClick={()=>Meteor.call('pickPerson')}> 
+		  onClick={()=>{Meteor.call('pickPerson'); console.log(user.pickedPerson)}}> 
 		  Wylosuj! 
 		</Button>
 		</>
@@ -94,10 +126,35 @@ export default Dashboard = () => {
 	      </VStack>
   	    </TabPanel>
   	    <TabPanel>
-	      <VStack>	
-		<Textarea size='lg' placeholder="Jeśli chcesz dać propozycję św. Mikołajowi, możesz to zrobić tutaj." />
-	      	<Button size='lg'> Zapisz </Button>
-	      </VStack>
+	      <Formik
+		initialValues={{
+      	          note:	user.note,
+      	        }}
+      	        onSubmit={(values) => {
+		  Meteor.call('saveNote', values.note);
+      	        }}
+	      >
+      	      {({ handleSubmit, errors, touched }) => (
+      	        <form onSubmit={handleSubmit}>
+      	          <VStack>
+      	            <FormControl>
+      	              <Field
+			as={Textarea}
+      	                id="note"
+      	                name="note"
+      	                type="text"
+			size='lg'
+			placeholder="Jeśli chcesz, tutaj możesz zostawić list do Św. Mikołaja🎅"
+      	                variant="filled"
+      	              />
+      	            </FormControl>
+      	            <Button type="submit" colorScheme="green">
+		      Wyślij
+      	            </Button>
+      	          </VStack>
+      	        </form>
+      	      )}
+      	      </Formik>
   	    </TabPanel>
   	  </TabPanels>
 	</Tabs>
