@@ -26,7 +26,7 @@ export default LoginForm = () => {
           password: ""
         }}
         onSubmit={(values) => {
-	  Accounts.createUser({email: values.email, password: values.password, profile: {name: values.name}},
+	  Accounts.createUser({email: values.email, password: values.password, profile:{name: values.name}},
 	    error => {
 	      if(!error)
 		setisregister(false);
@@ -38,7 +38,7 @@ export default LoginForm = () => {
           <form onSubmit={handleSubmit}>
             <VStack spacing={4} align="flex-start">
               <FormControl>
-                <FormLabel htmlFor="email">Adres email</FormLabel>
+                <FormLabel htmlFor='email'>Adres email</FormLabel>
                 <Field
                   as={Input}
                   id="email"
@@ -102,7 +102,7 @@ export default LoginForm = () => {
           <form onSubmit={handleSubmit}>
             <VStack spacing={4} align="flex-start">
               <FormControl>
-                <FormLabel htmlFor="email">Adres email</FormLabel>
+                <FormLabel htmlFor='email'>Adres email</FormLabel>
                 <Field
                   as={Input}
                   id="email"
