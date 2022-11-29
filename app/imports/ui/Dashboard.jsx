@@ -76,7 +76,7 @@ export default Dashboard = () => {
   	  <TabPanels>
   	    <TabPanel>
 	      <VStack>	
-		{user.draw_person ? 
+		{user.pickedPerson ? 
 		<Heading size='md' p={6}>
 		  Wylosowano: { user.pickedPerson }!
 		</Heading>
