@@ -10,12 +10,14 @@ import {
   FormLabel,
   FormErrorMessage,
   Input,
-  VStack
+  VStack,
+  useToast,
 } from "@chakra-ui/react";
 import { Accounts } from 'meteor/accounts-base';
 
 export default LoginForm = () => {
   const [isregister, setisregister] = useState(false);
+  const toast = useToast();
 
   const Register = () => (
     <>
@@ -23,13 +25,23 @@ export default LoginForm = () => {
         initialValues={{
           email:    "",
 	  name:     "",
-          password: ""
+          password: "",
+	  token:    "",
         }}
         onSubmit={(values) => {
-	  Accounts.createUser({email: values.email, password: values.password, profile:{name: values.name}},
-	    error => {
-	      if(!error)
+	  Accounts.createUser({email: values.email, password: values.password, profile:{name: values.name, token: values.token}},
+	    err => {
+	      if(err) {
+		toast({
+		  title: 'Błąd',
+          	  description: err.reason,
+          	  status: 'error',
+          	  duration: 9000,
+          	  isClosable: true,
+		})
+	      } else {
 		setisregister(false);
+	      }
 	    }
 	  );
         }}
@@ -45,6 +57,7 @@ export default LoginForm = () => {
                   name="email"
                   type="email"
                   variant="filled"
+		  required	
                 />
               </FormControl>
               <FormControl>
@@ -55,6 +68,7 @@ export default LoginForm = () => {
                   name="name"
                   type="text"
                   variant="filled"
+		  required	
                 />
               </FormControl>
               <FormControl isInvalid={!!errors.password && touched.password}>
@@ -65,6 +79,7 @@ export default LoginForm = () => {
                   name="password"
                   type="password"
                   variant="filled"
+		  required	
                   validate={(value) => {
                     let error;
 
@@ -76,6 +91,17 @@ export default LoginForm = () => {
                   }}
                 />
                 <FormErrorMessage>{errors.password}</FormErrorMessage>
+              </FormControl>
+              <FormControl isInvalid={!!errors.token && touched.token}>
+                <FormLabel>Token</FormLabel>
+                <Field
+                  as={Input}
+                  id="token"
+                  name="token"
+		  required	
+                  type="text"
+                  variant="filled"
+                />
               </FormControl>
               <Button type="submit" colorScheme="purple" width="full" >
                 Zarejestruj
@@ -95,7 +121,17 @@ export default LoginForm = () => {
           password: "",
         }}
         onSubmit={(values) => {
-	  Meteor.loginWithPassword(values.email,values.password);
+	  Meteor.loginWithPassword(values.email,values.password, (err,res)=> {
+	    if(err) {
+	      toast({
+	        title: 'Błąd',
+	        description: err.reason,
+	        status: 'error',
+	        duration: 9000,
+	        isClosable: true,
+	      })
+	    }
+	  });
         }}
       >
         {({ handleSubmit, errors, touched }) => (
@@ -109,6 +145,7 @@ export default LoginForm = () => {
                   name="email"
                   type="email"
                   variant="filled"
+		  required	
                 />
               </FormControl>
               <FormControl isInvalid={!!errors.password && touched.password}>
@@ -119,6 +156,7 @@ export default LoginForm = () => {
                   name="password"
                   type="password"
                   variant="filled"
+		  required	
                 />
                 <FormErrorMessage>{errors.password}</FormErrorMessage>
               </FormControl>

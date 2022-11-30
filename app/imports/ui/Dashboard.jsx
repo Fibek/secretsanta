@@ -25,7 +25,9 @@ import {
   AlertDialogOverlay,
   Tabs, TabList, TabPanels, Tab, TabPanel,
   Text,
-  Card, CardHeader, CardBody, CardFooter, Divider
+  Card, CardHeader, CardBody, CardFooter, Divider,
+  Spinner,
+  useToast,
 } from "@chakra-ui/react";
 import { MdOutlineLogout } from 'react-icons/md'
 
@@ -36,8 +38,8 @@ export default Dashboard = () => {
   const user = useTracker(() => Meteor.user());
   const { isOpen, onOpen, onClose} = useDisclosure();
   const cancelRef = React.useRef()
-  const pickedPersonNote = 'alalal';
-  console.log(pickedPersonNote);
+  const pickedPersonNote = user.recipientNote;
+  const toast = useToast();
 
   return( 
     <Flex align="center" justify="center" h="100vh">
@@ -118,7 +120,19 @@ export default Dashboard = () => {
 		  Jeszcze nie wylosowałeś nikogo, kliknij przycisk poniżej!
 		</Heading>
 	      	<Button colorScheme='green' size='lg' 
-		  onClick={()=>{Meteor.call('pickPerson'); console.log(user.pickedPerson)}}> 
+		  onClick={()=>{
+		    Meteor.call('pickPerson', (err,res) => {
+		      if(err) {
+			toast({
+			  title: 'Błąd',
+          		  description: err.reason,
+          		  status: 'error',
+          		  duration: 9000,
+          		  isClosable: true,
+			})
+		      } 
+		    })
+		  }}> 
 		  Wylosuj! 
 		</Button>
 		</>

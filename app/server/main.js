@@ -6,12 +6,14 @@ import { Random } from 'meteor/random';
 Raffle = new Mongo.Collection('raffle');
 const _rafname = 'test';
 const _ucount = 5;
+const secret = Random.secret(10);
 
 Accounts.onCreateUser((options,user) => {
 
   const customUser = Object.assign({
     pickedPerson: '',
     pickedPersonId: '',
+    recipientNote: '',
     note: '',
   }, user);
   
@@ -21,6 +23,19 @@ Accounts.onCreateUser((options,user) => {
 
   console.warn('Register:', customUser.profile.name);
   return customUser;
+});
+
+Accounts.validateNewUser((user) => {
+  const tmp=Raffle.findOne({rafflename: _rafname},{fields: {status:1,token:1}});
+  if( tmp.status == 1 ) {
+    throw new Meteor.Error(403, 'Wymagana liczba uczestników została osiągnięta');
+    return false;
+  }
+  if( user.profile.token === tmp.token )
+    return true;
+  else 
+    throw new Meteor.Error(403, 'Zły token');
+  return false;
 });
 
 const shuffleArray = array => {
@@ -75,18 +90,25 @@ Accounts.onLogin(() => {
 
 Meteor.methods({
   'pickPerson'() {
-    const tmp = Raffle.findOne({'users.giver': Meteor.userId()}, 
-		  {fields: {'users.recipient.$':1}}
-		).users[0].recipient;
-    const pickedUserName = Meteor.users.findOne({_id: tmp},{fields: {profile: 1}}).profile.name;
-    console.log('pickPerson()',tmp);
-    Meteor.users.update({_id: Meteor.userId()}, 
-      {$set: {pickedPerson: pickedUserName}});
-    Meteor.users.update({_id: Meteor.userId()}, 
-      {$set: {pickedPersonId: tmp}});
+    const rafflestatus = Raffle.findOne({rafflename: _rafname}).status;
+    if(rafflestatus == 1) {
+      const tmp = Raffle.findOne({'users.giver': Meteor.userId()}, 
+          	  {fields: {'users.recipient.$':1}}
+          	).users[0].recipient;
+      const pickedUserName = Meteor.users.findOne({_id: tmp},{fields: {profile: 1}}).profile.name;
+      console.log('pickPerson()',tmp);
+      Meteor.users.update({_id: Meteor.userId()}, 
+        {$set: {pickedPerson: pickedUserName}});
+      Meteor.users.update({_id: Meteor.userId()}, 
+        {$set: {pickedPersonId: tmp}});
+    } else {
+      throw new Meteor.Error('raffle.notenoughusers', 'Aby wylosować osobę, muszą dołączyć wszyscy uczestnicy');
+    }
   },
   'saveNote'(textnote) {
     console.log('savenote()',textnote);
+    Meteor.users.update({pickedPersonId: Meteor.userId()}, 
+      {$set: {recipientNote: textnote}});
     Meteor.users.update({_id: Meteor.userId()}, 
       {$set: {note: textnote}});
   }
@@ -114,10 +136,9 @@ Meteor.publish('userOwnNote', function () {
 
 Meteor.publish('userReadNote', function () {
   if (this.userId) {
-    const pickedId = Meteor.users.findOne({ _id: this.userId}, {
-      fields: { pickedPersonid: 1}
-    }).pickedPersonid;
-    return Meteor.users.find({_id: pickedId},{fields: {note: 1}});
+    return Meteor.users.find({_id: this.userId},{
+      fields: {recipientNote: 1}
+    });
   } else {
     this.ready();
   }
@@ -125,7 +146,7 @@ Meteor.publish('userReadNote', function () {
 
 Meteor.startup(() => {
   if(!Raffle.findOne({rafflename: _rafname})) {
-    console.log('Inserting new raffle');
-    Raffle.insert({rafflename: _rafname, usercount: _ucount, status: 0, users: []});
+    console.warn('Inserting new raffle. Token:',secret);
+    Raffle.insert({rafflename: _rafname, token: secret, usercount: _ucount, status: 0, users: []});
   }
 });
