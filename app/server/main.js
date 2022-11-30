@@ -83,7 +83,15 @@ Accounts.onLogin(() => {
 	  {$push: {users: {giver: givers[i], recipient: recipients[i]}}});
       }
       Raffle.update({rafflename: _rafname}, {$set: {status: 1}});
+
     } 
+    Meteor.users.find().forEach((person) => {
+      if(person.note !== '') {
+        console.log(person);
+        Meteor.users.update({pickedPersonId: person._id}, 
+          {$set: {recipientNote: person.note}});
+      }
+    });
   }
 });
 
