@@ -79,7 +79,6 @@ class Snow extends React.Component {
     this.setState({ w: window.innerWidth, h: window.innerHeight}, );
     this.drawbg(this.state.P5);
     this.state.P5.resizeCanvas(this.state.w, this.state.h);
-    console.log('resized');
   };
 
   componentDidMount() {
