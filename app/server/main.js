@@ -4,8 +4,8 @@ import { Mongo } from 'meteor/mongo';
 import { Random } from 'meteor/random';
 
 Raffle = new Mongo.Collection('raffle');
-const _rafname = 'test';
-const _ucount = 5;
+const _rafname = 'official';
+const _ucount = 12;
 const secret = Random.secret(10);
 
 Accounts.onCreateUser((options,user) => {
