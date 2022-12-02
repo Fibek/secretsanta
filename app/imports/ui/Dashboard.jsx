@@ -145,7 +145,25 @@ export default Dashboard = () => {
       	          note:	user.note,
       	        }}
       	        onSubmit={(values) => {
-		  Meteor.call('saveNote', values.note);
+		  Meteor.call('saveNote', values.note, (err,res) => {
+		    if(err) {
+		      toast({
+		        title: 'Błąd',
+          	        description: err.reason,
+          	        status: 'error',
+          	        duration: 9000,
+          	        isClosable: true,
+		      })
+		    } else {
+		      toast({
+		        title: 'Ok',
+          	        description: 'List został wysłany!',
+          	        status: 'success',
+          	        duration: 9000,
+          	        isClosable: true,
+		      })
+		    }
+		  });
       	        }}
 	      >
       	      {({ handleSubmit, errors, touched }) => (
