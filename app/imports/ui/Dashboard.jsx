@@ -40,10 +40,11 @@ export default Dashboard = () => {
   const cancelRef = React.useRef()
   const pickedPersonNote = user.recipientNote;
   const toast = useToast();
+  const winWidth = (window.innerWidth > 800 ? 800 : window.innerWidth-100);
 
   return( 
     <Flex align="center" justify="center" h="100vh">
-      <Box bg="white" p={6} rounded="md" w={800}>
+      <Box bg="white" p={6} rounded="md" w={winWidth}>
 	<Flex p={4}>
 	  <Heading> Witaj, { user.profile.name }!  </Heading>
 	  <Spacer />
@@ -102,7 +103,12 @@ export default Dashboard = () => {
 			</CardHeader>
 			<Divider/>
 		        <CardBody>
-		          <Text fontSize='2xl'>
+		    
+		          <Text 
+			    fontSize={{ base: '16px', md: 'lg', lg: 'xl' }} 
+			    align='center' 
+			    overflow='auto'
+			  >
 		            {pickedPersonNote}
 		          </Text>
 		        </CardBody>
